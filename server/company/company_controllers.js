@@ -1,6 +1,7 @@
 "use strict";
 
 var Company = require('./company_model.js');
+var _ = require('lodash');
 
 module.exports = exports = {
 
@@ -70,6 +71,19 @@ module.exports = exports = {
       }
       res.json(201, {_id: company.id});
     });
+  },
+  getList: function(req, res) {
+    //get a list of all the companies in jq
+    Company.find()
+      .exec(function(err, companies) {
+        if(err) {
+          throw err;
+        }
+        var list = _.map(companies, function(company) {
+          return company.name;
+        });
+        console.log(list);
+    });
+    // console.log(Company.find(), '   all of the companies');
   }
-
 };

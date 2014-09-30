@@ -7,9 +7,35 @@ var bodyParser    = require('body-parser'),
     mongoose      = require('mongoose'),
     morgan        = require('morgan'),
     expressJwt    = require('express-jwt'),
-    api           = require('indeed-api').getInstance('5498153875439113');
+    api           = require('indeed-api').getInstance('5498153875439113'),
+    _             = require('lodash'),
+    companyController = require('../company/company_controllers'),
+    jobkeys       = [];
 
-console.log(api, ' api');
+var keywords = [];
+
+api.JobSearch()
+  .Radius(100)
+  .WhereLocation({
+    city : "San Francisco",
+    state : "CA"
+  })
+  .Limit(25)
+  .WhereKeywords(keywords)
+  .SortBy("date")
+  .UserIP("http://localhost:9000")
+  .UserAgent("Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36")
+  .Search(function (results) {
+    companyController.getList();
+    // do something with the success results
+    // console.log(results, '   results');
+  }, function (error) {
+    // do something with the error results
+    console.log(error);
+  });
+
+
+
 mongoose.connect(process.env.DB_URL || 'mongodb://localhost/myApp');
 /*
  * Include all your global env variables here.
