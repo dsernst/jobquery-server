@@ -138,7 +138,6 @@ module.exports = exports = {
   },
 
   get: function (req, res) {
-    console.log(User.find()._collection.collection, ' userrrrr');
 
     var data = {};
     var queryParams = {};

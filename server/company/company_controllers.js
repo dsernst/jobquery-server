@@ -2,6 +2,8 @@
 
 var Company = require('./company_model.js');
 var _ = require('lodash');
+var api = require('indeed-api').getInstance('5498153875439113');
+
 
 module.exports = exports = {
 
@@ -72,18 +74,32 @@ module.exports = exports = {
       res.json(201, {_id: company.id});
     });
   },
-  getList: function(req, res) {
-    //get a list of all the companies in jq
-    Company.find()
-      .exec(function(err, companies) {
-        if(err) {
-          throw err;
+  getOpp: function(req, res) {
+    var keywords = [req.body.keyword];
+    api.JobSearch()
+    .Radius(100)
+    .WhereLocation({
+      city : "San Francisco",
+      state : "CA"
+    })
+    .Limit(25)
+    .WhereKeywords(keywords)
+    .SortBy("date")
+    .UserIP("http://localhost:9000")
+    .UserAgent("Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36")
+    .Search(function (results) {
+      var opportunities = _.map(results.results, function(result) {
+        if(result.company === req.body.keyword) {
+          return result;
         }
-        var list = _.map(companies, function(company) {
-          return company.name;
-        });
-        console.log(list);
+      });
+      // do something with the success results
+      console.log(opportunities);
+      res.json(201, opportunities);
+    }, function (error) {
+      // do something with the error results
+      console.log(error,'  here is the error');
+      res.json(400, error);
     });
-    // console.log(Company.find(), '   all of the companies');
   }
 };
