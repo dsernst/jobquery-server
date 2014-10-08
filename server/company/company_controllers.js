@@ -10,12 +10,13 @@ var indeedInfo = {};
 var indeedSearch = function(company) {
     var deferred = q.defer();
     api.JobSearch()
-      .Radius(100)
+      .Radius(500)
       .WhereLocation({
         city : "San Francisco",
         state : "CA"
       })
-      .Limit(25)
+      // .Limit(50)
+      .FromResult(50)
       .WhereKeywords(company)
       .SortBy("date")
       .UserIP("http://localhost:9000")
@@ -118,10 +119,8 @@ module.exports = exports = {
           return indeedSearch(keyword);
         });
         q.all(promises).done(function() {
-          console.log(indeedInfo, '======finished!========');
           res.json(201, indeedInfo);
         });
-        // console.log(promises, '-------promises========');
 
     });
   }
