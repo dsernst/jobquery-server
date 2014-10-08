@@ -6,8 +6,48 @@ var bodyParser    = require('body-parser'),
     middle        = require('./middleware'),
     mongoose      = require('mongoose'),
     morgan        = require('morgan'),
-    expressJwt    = require('express-jwt');
+    expressJwt    = require('express-jwt'),
+    api           = require('indeed-api').getInstance('5498153875439113'),
+    _             = require('lodash'),
+    Company = require('../company/company_model.js');
 
+var list = [];
+var indeedJobs = {};
+
+// Company.find()
+//   .exec(function(err, companies) {
+//     getJobList(companies);
+// });
+
+// var getJobList = function(companies) {
+//   var jqCompanies = _.map(companies, function(company) {
+//     return company.name;
+//   });
+//   list.push(jqCompanies.join(','));
+//   getJobs(list);
+// };
+
+// var getJobs = function(keywords) {
+//   api.JobSearch()
+//     .Radius(100)
+//     .WhereLocation({
+//       city : "San Francisco",
+//       state : "CA"
+//     })
+//     .Limit(25)
+//     .WhereKeywords(keywords)
+//     .SortBy("date")
+//     .UserIP("http://localhost:9000")
+//     .UserAgent("Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36")
+//     .Search(function (results) {
+//       _.each(results.results, function(result) {
+//       });
+//       // do something with the success results
+//     }, function (error) {
+//       // do something with the error results
+//       console.log(error);
+//     });
+// };
 
 mongoose.connect(process.env.DB_URL || 'mongodb://localhost/myApp');
 /*
