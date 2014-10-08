@@ -62,7 +62,7 @@ module.exports = exports = {
       .find({opportunity: req.params.id})
       .select('-createdAt -updatedAt -opportunity')
       .populate([
-        {path: 'user', select: 'name email tags category searchStage'}
+        {path: 'user', select: 'name email tags category searchStage attending'}
       ])
       .exec()
       .then(function (data) {
