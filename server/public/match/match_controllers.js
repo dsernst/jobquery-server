@@ -116,7 +116,7 @@ module.exports = exports = {
       .where('approved').equals(true)
       .populate([
         {path: 'category', select: 'name'},
-        {path: 'company', select: 'name'},
+        {path: 'company', select: 'name city'},
         {path: 'tags.tag', select: 'name type isPublic active'}
       ])
       .exec()

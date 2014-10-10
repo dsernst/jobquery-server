@@ -62,7 +62,7 @@ module.exports = exports = {
       .find({opportunity: req.params.id})
       .select('-createdAt -updatedAt -opportunity')
       .populate([
-        {path: 'user', select: 'name email tags category searchStage'}
+        {path: 'user', select: 'name email tags category searchStage attending'}
       ])
       .exec()
       .then(function (data) {
@@ -138,6 +138,7 @@ module.exports = exports = {
   },
 
   get: function (req, res) {
+
     var data = {};
     var queryParams = {};
 
@@ -176,7 +177,6 @@ module.exports = exports = {
   },
 
   put: function(req, res){
-
     if (req.body.user !== undefined) {
       var id = req.body._id;
       var isProcessed = req.body.isProcessed;
@@ -246,7 +246,6 @@ module.exports = exports = {
     var oppOrder = [];
     var oppData = {};
     var newData = {};
-
     Q.all([
       User
       .find()

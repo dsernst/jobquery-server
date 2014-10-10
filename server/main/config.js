@@ -6,8 +6,13 @@ var bodyParser    = require('body-parser'),
     middle        = require('./middleware'),
     mongoose      = require('mongoose'),
     morgan        = require('morgan'),
-    expressJwt    = require('express-jwt');
+    expressJwt    = require('express-jwt'),
+    api           = require('indeed-api').getInstance('5498153875439113'),
+    _             = require('lodash'),
+    Company = require('../company/company_model.js');
 
+var list = [];
+var indeedJobs = {};
 
 mongoose.connect(process.env.DB_URL || 'mongodb://localhost/myApp');
 /*
