@@ -17,6 +17,7 @@ module.exports = exports = {
         res.json(500, err);
         return;
       }
+
       res.json(200, opp);
     });
   },
@@ -82,8 +83,8 @@ module.exports = exports = {
     Opportunity.find()
     .populate([
       {path: 'company'},
-      // {path: 'tags.tag'},
-      // {path: 'survey.user'},
+      {path: 'tags.tag'},
+      {path: 'survey.user'},
       {path: 'category'}
     ])
     .exec(function (err, opps) {
