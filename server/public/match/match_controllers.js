@@ -121,7 +121,6 @@ module.exports = exports = {
       ])
       .exec()
       .then(function (data) {
-        console.log(data, '---------yoooooooo-----------');
           // filter opportunities that are not yet approved
           for (var i = 0; i < data.length; i += 1) {
             if (!data[i].approved) {
