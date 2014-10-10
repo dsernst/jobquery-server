@@ -116,11 +116,12 @@ module.exports = exports = {
       .where('approved').equals(true)
       .populate([
         {path: 'category', select: 'name'},
-        {path: 'company', select: 'name'},
+        {path: 'company', select: 'name city'},
         {path: 'tags.tag', select: 'name type isPublic active'}
       ])
       .exec()
       .then(function (data) {
+        console.log(data, '---------yoooooooo-----------');
           // filter opportunities that are not yet approved
           for (var i = 0; i < data.length; i += 1) {
             if (!data[i].approved) {
