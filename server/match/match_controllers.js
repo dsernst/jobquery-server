@@ -54,6 +54,7 @@ module.exports = exports = {
   },
 
   getByOppId: function (req, res) {
+    console.log(req.params.id, 'params');
     var matches;
     var opportunity;
 
@@ -152,11 +153,11 @@ module.exports = exports = {
       .find(queryParams)
       .select('-createdAt -answers')
       .exec(function (err, matches) {
-        // data.matches = matches;
+        data.matches = matches;
         matches.forEach(function (match) {
-        var oppId = match.opportunity;
-        if (match.userInterest > 0) { allOpportunities[oppId].declared++; }
-        if (match.userInterest > 2) { allOpportunities[oppId].interested++; }
+          var oppId = match.opportunity;
+          if (match.userInterest > 0) { allOpportunities[oppId].declared++; }
+          if (match.userInterest > 2) { allOpportunities[oppId].interested++; }
         });
       }),
 
