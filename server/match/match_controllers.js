@@ -138,8 +138,9 @@ module.exports = exports = {
   },
 
   get: function (req, res) {
-
+    console.log('match getAll!!!!!!!!!!!');
     var data = {};
+    var allOpportunities = {};
     var queryParams = {};
 
     if(req.query.fromDate) queryParams.updatedAt = {$gt: req.query.fromDate}
@@ -150,7 +151,12 @@ module.exports = exports = {
       .find(queryParams)
       .select('-createdAt -answers')
       .exec(function (err, matches) {
-        data.matches = matches;
+        // data.matches = matches;
+        matches.forEach(function (match) {
+        var oppId = match.opportunity;
+        if (match.userInterest > 0) { allOpportunities[oppId].declared++; }
+        if (match.userInterest > 2) { allOpportunities[oppId].interested++; }
+        });
       }),
 
       Opportunity
@@ -161,7 +167,29 @@ module.exports = exports = {
         {path: 'category', select: 'name'}
       ])
       .exec(function (err, opportunities) {
-        data.opportunities = opportunities;
+        // data.opportunities = opportunities;
+        opportunities.forEach(function(oppModel) {
+          var groupName = oppModel.category.name;
+          var opportunity = {};
+          if (!data[groupName]) { data[groupName] = []; }
+
+          opportunity._id = oppModel._id;
+          opportunity.category = oppModel.category;
+          opportunity.groupName = groupName;
+          opportunity.company = oppModel.company.name;
+          opportunity.company._id = oppModel.company._id;
+          opportunity.title = oppModel.jobTitle;
+          opportunity.attending = groupName === 'Attending Hiring Day' ? true : false;
+          opportunity.active = oppModel.active;
+          opportunity.approved = oppModel.approved;
+          opportunity.internalNotes =
+          oppModel.internalNotes.length > 0 ? oppModel.internalNotes[0].text : null;
+          opportunity.interested = 0;
+          opportunity.declared = 0;
+
+          allOpportunities[opportunity._id] = opportunity;
+          data[groupName].push(opportunity);
+        });
       })
     ])
     .then(function () {
@@ -177,6 +205,7 @@ module.exports = exports = {
   },
 
   put: function(req, res){
+    console.log(req.body);
     if (req.body.user !== undefined) {
       var id = req.body._id;
       var isProcessed = req.body.isProcessed;
@@ -205,12 +234,12 @@ module.exports = exports = {
       var upVote = req.body.upVote;
       var downVote = req.body.downVote;
       var noGo = req.body.noGo;
+      var updateParams = {};
       var opportunityId = req.headers.referer.split('/')[5];
       Match.findOne({ user : userId, opportunity: opportunityId }, function(err, match){
         if (err){
           res.send(500);
         } else {
-          var updateParams = {};
 
           if(adminOverride !== undefined){
             updateParams.adminOverride = adminOverride;
@@ -227,8 +256,8 @@ module.exports = exports = {
           if(noGo !== undefined){
             updateParams.noGo = noGo;
           }
-          match.update(updateParams, function(err){
-            err ? res.send(500) : res.send({_id: match._id});
+          match.update(updateParams, function(err, param){
+            err ? res.send(500) : res.send({_id: match._id, match: match});
           });
         }
       });
