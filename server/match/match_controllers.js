@@ -62,7 +62,7 @@ module.exports = exports = {
       .find({opportunity: req.params.id})
       .select('-createdAt -updatedAt -opportunity')
       .populate([
-        {path: 'user', select: 'name email tags category searchStage attending'}
+        {path: 'user', select: 'name email tags category searchStage attending', match: {attending: true}}
       ])
       .exec()
       .then(function (data) {
@@ -75,7 +75,7 @@ module.exports = exports = {
           )
           .then(function (finalData) {
             matches = finalData;
-            return;
+            return finalData;
           });
         });
       }),
@@ -93,6 +93,7 @@ module.exports = exports = {
       })
     ])
     .then(function () {
+      console.log(Match.user, 'match');
       res.json(200, {matches: matches, opportunity: opportunity});
     });
   },
