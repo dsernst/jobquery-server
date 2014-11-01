@@ -57,6 +57,7 @@ module.exports = exports = {
     console.log(req.params.id, 'params');
     var matches;
     var opportunity;
+    var notAttending;
 
     Q.all([
       Match
@@ -80,6 +81,27 @@ module.exports = exports = {
           });
         });
       }),
+      Match
+      .find({opportunity: req.params.id})
+      .select('-createdAt -updatedAt -opportunity')
+      .populate([
+        {path: 'user', select: 'name email tags category searchStage attending', match: {attending: false}}
+      ])
+      .exec()
+      .then(function (data) {
+        return Tag.populate(data,
+          {path: 'user.tags.tag', select: '-createdAt -updatedAt'}
+        )
+        .then(function (matchesWithTags) {
+          return Category.populate(matchesWithTags,
+            {path: 'user.category', select: 'name'}
+          )
+          .then(function (finalData) {
+            notAttending = finalData;
+            return finalData;
+          });
+        });
+      }),
 
       Opportunity
       .findOne({_id: req.params.id})
@@ -95,7 +117,7 @@ module.exports = exports = {
     ])
     .then(function () {
       console.log(Match.user, 'match');
-      res.json(200, {matches: matches, opportunity: opportunity});
+      res.json(200, {matches: matches, opportunity: opportunity, notAttending: notAttending});
     });
   },
 
