@@ -104,5 +104,4 @@ module.exports = exports = {
       res.json(201, {_id: opp.id});
     });
   }
-
 };

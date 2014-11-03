@@ -162,12 +162,11 @@ module.exports = exports = {
   },
 
   get: function (req, res) {
-    console.log('match getAll!!!!!!!!!!!');
     var data = {};
     var allOpportunities = {};
     var queryParams = {};
 
-    if(req.query.fromDate) queryParams.updatedAt = {$gt: req.query.fromDate}
+    if(req.query.fromDate) queryParams.updatedAt = {$gt: req.query.fromDate};
     if(req.query.isProcessed) queryParams.isProcessed = req.query.isProcessed;
 
     Q.all([
@@ -222,10 +221,41 @@ module.exports = exports = {
   },
 
   batchProcess: function(req, res){
-    var ids = req.body.ids;
-    Match.update({_id: {$in: ids}}, { $set: { isProcessed: true }}, {multi: true}, function(err, data){
-      err ? res.send(500) : res.send(200);
-    });
+    var data = {};
+    var allOpportunities = {};
+    Opportunity
+      .find()
+      .select('active approved category company jobTitle internalNotes')
+      .populate([
+        {path: 'company', select: 'name'},
+        {path: 'category', select: 'name'}
+      ])
+      .exec(function (err, opportunities) {
+        // data.opportunities = opportunities;
+        opportunities.forEach(function(oppModel) {
+          var groupName = oppModel.category.name;
+          var opportunity = {};
+          if (!data[groupName]) { data[groupName] = []; }
+
+          opportunity._id = oppModel._id;
+          opportunity.category = oppModel.category;
+          opportunity.groupName = groupName;
+          opportunity.company = oppModel.company.name;
+          opportunity.company._id = oppModel.company._id;
+          opportunity.title = oppModel.jobTitle;
+          opportunity.attending = groupName === 'Attending Hiring Day' ? true : false;
+          opportunity.active = oppModel.active;
+          opportunity.approved = oppModel.approved;
+          opportunity.internalNotes =
+          oppModel.internalNotes.length > 0 ? oppModel.internalNotes[0].text : null;
+          opportunity.interested = 0;
+          opportunity.declared = 0;
+
+          allOpportunities[opportunity._id] = opportunity;
+          data[groupName].push(opportunity);
+        });
+        res.json(200, data);
+      });
   },
 
   put: function(req, res){
