@@ -12,7 +12,6 @@ module.exports = exports = {
   getByOppId: function (req, res) {
     var user;
     var match;
-
     Q.all([
       Match
       .findOne({user: req.user.id, opportunity: req.params.id})
@@ -22,6 +21,7 @@ module.exports = exports = {
       ])
       .exec()
       .then(function (data) {
+        console.log(data, '-=====data');
         return Tag.populate(data,
           {path: 'opportunity.tags.tag', select: '-createdAt -updatedAt'}
         )
