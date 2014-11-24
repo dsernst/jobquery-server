@@ -116,8 +116,9 @@ module.exports = exports = {
       })
     ])
     .then(function () {
-      console.log(Match.user, 'match');
-      res.json(200, {matches: matches, opportunity: opportunity, notAttending: notAttending});
+      // res.json(200, {matches: matches, opportunity: opportunity, notAttending: notAttending});
+      res.json(200, {opportunity: opportunity, matches: matches});
+
     });
   },
 
@@ -190,7 +191,7 @@ module.exports = exports = {
         {path: 'category', select: 'name'}
       ])
       .exec(function (err, opportunities) {
-        // data.opportunities = opportunities;
+        data.opportunities = opportunities;
         opportunities.forEach(function(oppModel) {
           var groupName = oppModel.category.name;
           var opportunity = {};
