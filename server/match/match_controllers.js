@@ -117,7 +117,7 @@ module.exports = exports = {
     ])
     .then(function () {
       // res.json(200, {matches: matches, opportunity: opportunity, notAttending: notAttending});
-      res.json(200, {opportunity: opportunity, matches: matches});
+      res.json(200, {opportunity: opportunity, matches: matches, notAttending: notAttending});
 
     });
   },
