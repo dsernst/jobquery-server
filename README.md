@@ -4,6 +4,7 @@ RESTful API backend for [jobQuery](http://jobqueryclient.azurewebsites.net/)
 
 ## Usage
 See the [client README](https://github.com/jobquery-enhance/jobquery-client#how-to-run-locally) for full instructions.
+
 1. Install dependencies with `npm install`.
 2. Start your local instance of MongoDB (`mongod`).
 3. Start the server by typing `node server.js` in the root folder.
