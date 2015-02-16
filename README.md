@@ -13,3 +13,9 @@ RESTful API backend for [jobQuery](http://jqapp.azurewebsites.net/)
 
 - Node.js with Express.js
 - MongoDB with Mongoose
+
+## Developer Tools
+[Morgan](https://github.com/expressjs/morgan) is express middleware which aids in debugging by logging HTML requests into the terminal. JobQuery currently uses the [dev format](https://github.com/expressjs/morgan#dev):
+
+    :method :url :status :response-time ms - :res[content-length]
+    POST /login 200 269.680 ms - 293
