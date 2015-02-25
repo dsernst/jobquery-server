@@ -17,15 +17,23 @@ module.exports = exports = {
     .exec()
     .then(function (data) {
 
+      var questionsToRemove = {
+        // data.tags[index].tag.name : data.tags[index].tag.label
+        "Industries": "What industries excite you the most?",
+        "Locations of Interest": "What other cities, if any, are you open to?",
+        "Other (Job Search)": "Anything else we should know about your job search situation?  i.e. looking to move into product management role, visa issues,",
+        "Exciting Industries": "What industries / domains excite you the most?",
+        "Other (Role)": "What else should we know about the role you are looking for or the work you like doing?",
+        "Other Skills": "Are there any other skills you\'d like to mention?"
+      };
+
       for (var i = 0; i < data.tags.length; i++) {
-        if( data.tags[i].tag.name == "Exciting Industries" ||
-            data.tags[i].tag.name == "Other \(Job Search\)" ||
-            data.tags[i].tag.name == "Locations of Interest" ||
-            data.tags[i].tag.name == "Industries"
-          ) {
+        if ( questionsToRemove[ data.tags[i].tag.name ] ) {
+          console.log('removed:',data.tags[i].tag.name );
           // Remove unwanted questions
-          console.log('Removed:', data.tags[i].tag.name);
           data.tags.splice(i, 1);
+          // If we don't go backwards one step, we may skip over an index accidentally.
+          i--;
         }
       }
       
