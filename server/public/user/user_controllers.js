@@ -23,13 +23,13 @@ module.exports = exports = {
       };
 
       for (var i = 0; i < data.tags.length; i++) {
-        console.log('category', data.tags[i].tag.name);
         if( data.tags[i].tag.name == "Exciting Industries" ||
             data.tags[i].tag.name == "Other (Job Search)" ||
             data.tags[i].tag.name == "Locations of Interest" ||
             data.tags[i].tag.name == "Industries"
           ) {
           removeTagAtIndex(i);
+          console.log('Removed:', data.tags[i].tag.name);
         }
       }
       
