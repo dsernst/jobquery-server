@@ -29,7 +29,6 @@ module.exports = exports = {
 
       for (var i = 0; i < data.tags.length; i++) {
         if ( questionsToRemove[ data.tags[i].tag.name ] ) {
-          console.log('removed:',data.tags[i].tag.name );
           // Remove unwanted questions
           data.tags.splice(i, 1);
           // If we don't go backwards one step, we may skip over an index accidentally.
