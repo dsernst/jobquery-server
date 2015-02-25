@@ -16,20 +16,16 @@ module.exports = exports = {
     .select('-isAdmin -internalNotes -password -resetHash')
     .exec()
     .then(function (data) {
-      
-      // Remove unwanted questions
-      var removeTagAtIndex = function(index) {
-        return data.tags.splice(index, 1);
-      };
 
       for (var i = 0; i < data.tags.length; i++) {
         if( data.tags[i].tag.name == "Exciting Industries" ||
-            data.tags[i].tag.name == "Other (Job Search)" ||
+            data.tags[i].tag.name == "Other \(Job Search\)" ||
             data.tags[i].tag.name == "Locations of Interest" ||
             data.tags[i].tag.name == "Industries"
           ) {
-          removeTagAtIndex(i);
+          // Remove unwanted questions
           console.log('Removed:', data.tags[i].tag.name);
+          data.tags.splice(i, 1);
         }
       }
       
