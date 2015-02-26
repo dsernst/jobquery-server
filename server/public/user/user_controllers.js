@@ -16,6 +16,26 @@ module.exports = exports = {
     .select('-isAdmin -internalNotes -password -resetHash')
     .exec()
     .then(function (data) {
+
+      var questionsToRemove = {
+        // data.tags[index].tag.name : data.tags[index].tag.label
+        "Industries": "What industries excite you the most?",
+        "Locations of Interest": "What other cities, if any, are you open to?",
+        "Other (Job Search)": "Anything else we should know about your job search situation?  i.e. looking to move into product management role, visa issues,",
+        "Exciting Industries": "What industries / domains excite you the most?",
+        "Other (Role)": "What else should we know about the role you are looking for or the work you like doing?",
+        "Other Skills": "Are there any other skills you\'d like to mention?"
+      };
+
+      for (var i = 0; i < data.tags.length; i++) {
+        if ( questionsToRemove[ data.tags[i].tag.name ] ) {
+          // Remove unwanted questions
+          data.tags.splice(i, 1);
+          // If we don't go backwards one step, we may skip over an index accidentally.
+          i--;
+        }
+      }
+      
       Category.populate(data,
         {path: 'tags.tag.category', select: '-createdAt -updatedAt'},
         function (err, dataWithCategory) {
